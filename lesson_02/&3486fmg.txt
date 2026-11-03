@@ -1,0 +1,40 @@
+import math
+
+def relative_error(approx, exact):
+    """
+    Возвращает относительную погрешность δx = |approx - exact| / |exact|.
+    Если exact == 0, возвращаем float('inf'), чтобы избежать деления на ноль.
+    """
+    if exact == 0:
+        return float('inf')
+    return abs(approx - exact) / abs(exact)
+
+# --- Проверка 1: π и 3.14 ---
+pi_approx = 3.14
+pi_exact = math.pi
+err_pi = relative_error(pi_approx, pi_exact)
+print(f"Относительная погрешность для π: |{pi_approx} − π| / π = {err_pi:.12e}")
+
+# --- Проверка 2: (0.1 + 0.2) против 0.3 ---
+sum_01_02 = 0.1 + 0.2
+exact_03 = 0.3
+err_01_02 = relative_error(sum_01_02, exact_03)
+print(f"Относительная погрешность (0.1+0.2) vs 0.3: {err_01_02:.12e}")
+print(f"Разница (для наглядности): {abs(sum_01_02 - exact_03):.12e}")
+
+# --- Проверка 3: сумма миллиона 0.1 через обычный цикл vs math.fsum ---
+n = 1_000_000
+value = 0.1
+
+# Обычный способ (накапливаем в float)
+total_naive = 0.0
+for _ in range(n):
+    total_naive += value
+
+# Эталонный способ (с компенсацией ошибок)
+total_fsum = math.fsum([value] * n)
+
+err_sum = relative_error(total_naive, total_fsum)
+print(f"Сумма миллиона 0.1 (naive): {total_naive}")
+print(f"Сумма миллиона 0.1 (fsum):  {total_fsum}")
+print(f"Относительная погрешность naive vs fsum: {err_sum:.12e}")
